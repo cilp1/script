@@ -1,0 +1,162 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "Kd hub",
+   LoadingTitle = "loading",
+   LoadingSubtitle = "For kd only",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil,
+      FileName = "SquabbleConfig"
+   },
+   KeySystem = false
+})
+
+local Tab = Window:CreateTab("Main Features")
+
+-- Infinite Health Button: true → false → true)
+local Button = Tab:CreateButton({
+   Name = "Infinite Health",
+   Callback = function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local events = ReplicatedStorage:FindFirstChild("events")
+      if not events then
+         Rayfield:Notify({Title = "Error", Content = "events folder not found!", Duration = 5})
+         return
+      end
+      
+      local PvpToggle = events:FindFirstChild("PvpToggle")
+      if not PvpToggle then
+         Rayfield:Notify({Title = "Error", Content = "PvpToggle remote not found!", Duration = 5})
+         return
+      end
+      
+      local function fire(state)
+         pcall(function()
+            PvpToggle:FireServer(state)
+         end)
+      end
+      
+      fire(true)
+      task.wait(0.005)
+      fire(false)
+      task.wait(0.005)
+      fire(true)
+      
+      Rayfield:Notify({
+         Title = "Infinite Health Triggered",
+         Content = "Super-fast PvP sequence fired!\nTest if glitched/invincible.",
+         Duration = 5,
+      })
+   end,
+})
+
+local autoPush = false
+Tab:CreateToggle({
+   Name = "Auto Push",
+   CurrentValue = false,
+   Flag = "AutoPush",
+   Callback = function(Value)
+      autoPush = Value
+      if Value then
+         spawn(function()
+            while autoPush do
+               local args = {"Push"}
+               game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("MainKeys"):FireServer(unpack(args))
+               task.wait(0.05)
+            end
+         end)
+      end
+   end,
+})
+
+local autoStomp = false
+Tab:CreateToggle({
+   Name = "Auto Stomp",
+   CurrentValue = false,
+   Flag = "AutoStomp",
+   Callback = function(Value)
+      autoStomp = Value
+      if Value then
+         spawn(function()
+            while autoStomp do
+               local args = {"Stomp"}
+               game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("MainKeys"):FireServer(unpack(args))
+               task.wait(0.1)
+            end
+         end)
+      end
+   end,
+})
+
+local autoDrag = false
+Tab:CreateToggle({
+   Name = "Auto Drag",
+   CurrentValue = false,
+   Flag = "AutoDrag",
+   Callback = function(Value)
+      autoDrag = Value
+      if Value then
+         spawn(function()
+            while autoDrag do
+               local args = {"Drag"}
+               game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("MainKeys"):FireServer(unpack(args))
+               task.wait(0.05)
+            end
+         end)
+      end
+   end,
+})
+
+local autoPunch = false
+Tab:CreateToggle({
+   Name = "Auto Punch",
+   CurrentValue = false,
+   Flag = "AutoPunch",
+   Callback = function(Value)
+      autoPunch = Value
+      if Value then
+         spawn(function()
+            while autoPunch do
+               local args = {"Punch"}
+               game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("MainKeys"):FireServer(unpack(args))
+               task.wait(0.05)
+            end
+         end)
+      end
+   end,
+})
+
+-- Auto Headlock Toggle (very frequent spam of DamageTool)
+local autoHeadlock = false
+Tab:CreateToggle({
+   Name = "Auto Headlock (Very Frequent)",
+   CurrentValue = false,
+   Flag = "AutoHeadlock",
+   Callback = function(Value)
+      autoHeadlock = Value
+      if Value then
+         spawn(function()
+            while autoHeadlock do
+               local success, err = pcall(function()
+                  local args = {"DamageTool"}
+                  game:GetService("ReplicatedStorage")
+                     :WaitForChild("events", 5)
+                     :WaitForChild("MainKeys", 5)
+                     :FireServer(unpack(args))
+               end)
+               if not success then
+                  warn("[Auto Headlock] Error: " .. tostring(err))
+               end
+               task.wait(0.020)  -- Very frequent (~40x per second) — lower to 0.015 if you want even faster, but test for detection/kicks
+            end
+         end)
+      end
+   end,
+})
+
+Rayfield:Notify({
+   Title = "Script Updated",
+   Content = "Added Auto Headlock toggle (very frequent DamageTool spam).\nToggle ON near target for rapid headlocks. Use in private server first!",
+   Duration = 8,
+   Image = 4483362458,
+})
