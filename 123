@@ -1,8 +1,8 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-   Name = "Kd hub",
+   Name = "Private script",
    LoadingTitle = "loading",
-   LoadingSubtitle = "For kd only",
+   LoadingSubtitle = "For kd and mori only",
    ConfigurationSaving = {
       Enabled = true,
       FolderName = nil,
@@ -154,9 +154,39 @@ Tab:CreateToggle({
    end,
 })
 
+--auto escape
+local autoEscape = false
+Tab:CreateToggle({
+   Name = "Auto Escape",
+   CurrentValue = false,
+   Flag = "AutoEscape",
+   Callback = function(Value)
+      autoEscape = Value
+      if Value then
+         spawn(function()
+            while autoEscape do
+               pcall(function()
+                  local character = game:GetService("Players").LocalPlayer.Character
+                  local args = {
+                     character.Player.Damages.values.DamageTool.Escaped,
+                     true
+                  }
+
+                  game:GetService("ReplicatedStorage")
+                     :WaitForChild("events")
+                     :WaitForChild("ValueChange")
+                     :FireServer(unpack(args))
+               end)
+               task.wait(0.1)
+            end
+         end)
+      end
+   end,
+})
+
 Rayfield:Notify({
    Title = "Script Updated",
-   Content = "Added Auto Headlock toggle (very frequent DamageTool spam).\nToggle ON near target for rapid headlocks. Use in private server first!",
+   Content = "addded auto escape - op",
    Duration = 8,
    Image = 4483362458,
 })
