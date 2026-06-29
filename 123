@@ -184,6 +184,31 @@ Tab:CreateToggle({
    end,
 })
 
+local autoBlock = false
+local VIM = game:GetService("VirtualInputManager")
+
+local autoBlock = false
+local VIM = game:GetService("VirtualInputManager")
+
+Tab:CreateToggle({
+    Name = "Auto Block (T Key)",
+    CurrentValue = false,
+    Flag = "AutoBlockT",
+    Callback = function(Value)
+        autoBlock = Value
+
+        if autoBlock then
+            task.spawn(function()
+                while autoBlock do
+                    VIM:SendKeyEvent(true, Enum.KeyCode.T, false, game)
+                    task.wait(0.05)
+                    VIM:SendKeyEvent(false, Enum.KeyCode.T, false, game)
+                    task.wait(2.1)
+                end
+            end)
+        end
+    end,
+})
 Rayfield:Notify({
    Title = "Script Updated",
    Content = "addded auto escape - op",
